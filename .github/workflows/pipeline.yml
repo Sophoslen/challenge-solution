@@ -1,0 +1,8 @@
+name: pipeline
+
+on: 
+  - pull_request
+
+jobs:
+  buildAndTest:
+    uses: ./.github/workflows/ci.yml

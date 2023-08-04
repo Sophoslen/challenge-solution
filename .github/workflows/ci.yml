@@ -1,0 +1,34 @@
+name: ci-test
+
+on: 
+  workflow_call:
+
+jobs:
+  CI:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "code checkout"
+        uses: actions/checkout@v2
+
+      - name: "set node version"
+        uses: actions/setup-node@v2
+        with:
+          node-version: "15.14.0"
+
+      - name: "install dependencies"
+        run: npm i --prefix ./codebase/rdicidr-0.1.0
+
+      - name: "execute linter"
+        run: npm run lint --prefix ./codebase/rdicidr-0.1.0
+
+      - name: "formatter"
+        run: npm run prettier --prefix ./codebase/rdicidr-0.1.0
+
+      - name: "run test"
+        env:
+          CI: true
+        run: npm run test --prefix ./codebase/rdicidr-0.1.0
+
+      - name: "npm build"
+        run: npm run build --prefix ./codebase/rdicidr-0.1.0
