@@ -1,9 +1,7 @@
 name: pipeline
 
 on: 
-  push: 
-    branches:
-      - 'develop'
+  - pull_request
 
 jobs:
   buildAndTest:
