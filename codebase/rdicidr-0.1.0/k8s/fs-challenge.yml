@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fs-challenge-deployment
+  namespace: production
+  labels:
+    app: fs-challenge
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fs-challenge
+  template:
+    metadata:
+      labels:
+        app: fs-challenge
+    spec:
+      containers:
+        - name: fs-challenge
+          image: sophoslen/demoapp:v1
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            - name: MY_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: my-secret
+                  key: MY_SECRET_KEY
+
+---
+
+apiVersion: v1
+kind: Service
+metadata: 
+  name: fs-challenge
+  namespace: production
+spec:
+  type: NodePort
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+  selector:
+    app: fs-challenge
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress 
+metadata:
+  name: fs-challenge
+  namespace: production
+spec:
+  rules:
+  - host: fsl-challenge.me
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: fs-challenge
+            port:
+              number: 8080
