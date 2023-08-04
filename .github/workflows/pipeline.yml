@@ -1,0 +1,10 @@
+name: pipeline
+
+on: 
+  push: 
+    branches:
+      - 'develop'
+
+jobs:
+  buildAndTest:
+    uses: ./.github/workflows/ci.yml
